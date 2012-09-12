@@ -52,6 +52,7 @@ public class KafkaConfig implements Serializable {
     public Scheme scheme = new RawScheme();
     public String topic;
     public long startOffsetTime = -2;
+    public long startOffset = 0;
     public boolean forceFromStart = false;
 
     public KafkaConfig(BrokerHosts hosts, String topic) {
@@ -62,6 +63,11 @@ public class KafkaConfig implements Serializable {
 
     public void forceStartOffsetTime(long millis) {
         startOffsetTime = millis;
+        forceFromStart = true;
+    }
+
+    public void forceStartOffset(long offset) {
+        startOffset = offset;
         forceFromStart = true;
     }
 

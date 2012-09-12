@@ -61,8 +61,13 @@ public class PartitionManager {
         }
 
         if(!topologyInstanceId.equals(jsonTopologyId) && spoutConfig.forceFromStart) {
-            _committedTo = _consumer.getOffsetsBefore(spoutConfig.topic, id.partition, spoutConfig.startOffsetTime, 1)[0];
-	    LOG.info("Using startOffsetTime to choose last commit offset.");
+	    if(spoutConfig.startOffset > 0){
+		_committedTo = spoutConfig.startOffset;
+		LOG.info("Using startOffset as the last commit offset.");
+	    } else {
+		_committedTo = _consumer.getOffsetsBefore(spoutConfig.topic, id.partition, spoutConfig.startOffsetTime, 1)[0];
+		LOG.info("Using startOffsetTime to choose last commit offset.");
+	    }
         } else if(jsonTopologyId == null || jsonOffset == null) { // failed to parse JSON?
             _committedTo = _consumer.getOffsetsBefore(spoutConfig.topic, id.partition, -1, 1)[0];
 	    LOG.info("Setting last commit offset to HEAD.");
